@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MISA Executive Dashboard (Fullview - Deep Analytics)</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Styles -->
+    <script>
+        document.write(`<link rel="stylesheet" href="style.css?t=${new Date().getTime()}">`);
+    </script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- Chart.js & Datalabels -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script>
+        // Dynamic Cache Busting
+        const ts = new Date().getTime();
+        document.write(`<script src="data.js?t=${ts}"><\/script>`);
+        document.write(`<script src="app.js?t=${ts}"><\/script>`);
+    </script>
+</head>
+
+<body class="light-theme">
+    <div class="fullview-wrapper">
+        <!-- Top Navigation / Header -->
+        <header class="top-header">
+            <div class="logo">
+                <i class='bx bxs-pie-chart-alt-2'></i>
+                <span>MISA Deep Analytics</span>
+                <small id="report-date-range"
+                    style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted); margin-left: 1rem; border-left: 1px solid var(--border-color); padding-left: 1rem;"></small>
+            </div>
+
+            <div class="header-controls">
+                <div class="custom-dropdown" id="dropdown-issue">
+                    <div class="dropdown-selected">
+                        <span>Tất cả Lý do</span>
+                        <i class='bx bx-chevron-down'></i>
+                    </div>
+                    <ul class="dropdown-menu"></ul>
+                </div>
+
+                <div class="custom-dropdown" id="dropdown-rep">
+                    <div class="dropdown-selected">
+                        <span>Tất cả Nhân sự</span>
+                        <i class='bx bx-chevron-down'></i>
+                    </div>
+                    <ul class="dropdown-menu"></ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <main class="dashboard-grid">
+
+            <!-- Global KPIs Section -->
+            <section class="kpi-banner">
+                <div class="kpi-card total">
+                    <div class="kpi-icon"><i class='bx bx-group'></i></div>
+                    <div class="kpi-data">
+                        <p>Tổng Lead Phân Tích</p>
+                        <h2 id="kpi-total">0</h2>
+                    </div>
+                </div>
+                <div class="kpi-card follow-up">
+                    <div class="kpi-icon"><i class='bx bx-phone-call'></i></div>
+                    <div class="kpi-data">
+                        <p>Tiềm Năng / Chăm lại</p>
+                        <h2 id="kpi-followup">0</h2>
+                    </div>
+                </div>
+                <div class="kpi-card junk">
+                    <div class="kpi-icon"><i class='bx bx-trash'></i></div>
+                    <div class="kpi-data">
+                        <p>Tổng số Lead Rác / Xấu</p>
+                        <h2 id="kpi-drop">0</h2>
+                    </div>
+                </div>
+                <div class="kpi-card knm-alert">
+                    <div class="kpi-icon"><i class='bx bx-user-x'></i></div>
+                    <div class="kpi-data">
+                        <p>Khách Không Nghe Máy</p>
+                        <h2 id="kpi-knm">0</h2>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Analytics Row -->
+            <section class="deep-analytics-row">
+                <div class="pct-table-card">
+                    <h3>Phân Rã Vấn Đề</h3>
+                    <div class="table-container">
+                        <table class="pct-table" id="table-issues">
+                            <thead>
+                                <tr>
+                                    <th>Chi tiết Hành Vi</th>
+                                    <th>Số lượng</th>
+                                    <th>Tỷ lệ %</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="chart-box">
+                    <div class="chart-header">
+                        <h3>Phân Phối Chất Lượng Lead (Tagging)</h3>
+                        <i class='bx bx-purchase-tag-alt'></i>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chartQuality"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comprehensive Charts Grid -->
+            <section class="charts-mosaic">
+                <!-- Group 1: Demographics -->
+                <div class="chart-box">
+                    <div class="chart-header">
+                        <h3>Trình độ Học Vấn</h3>
+                        <i class='bx bxs-graduation'></i>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chartDegree"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-box">
+                    <div class="chart-header">
+                        <h3>Nền Tảng Tiếng Anh</h3>
+                        <i class='bx bx-globe'></i>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chartEnglish"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-box">
+                    <div class="chart-header">
+                        <h3>Chương Trình Quan Tâm</h3>
+                        <i class='bx bx-book-bookmark'></i>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chartProgram"></canvas>
+                    </div>
+                </div>
+
+                <!-- Group 2: Behavioral & Performance Metrics -->
+
+                <div class="chart-box height-large">
+                    <div class="chart-header">
+                        <h3>Vòng đời KNM & Tỷ lệ Chăm lại</h3>
+                        <i class='bx bx-refresh'></i>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chartKNMLifecycle"></canvas>
+                    </div>
+                </div>
+
+
+
+                <div class="chart-box span-2 height-large">
+                    <div class="chart-header">
+                        <h3>Hiệu Suất Cuộc Gọi & Tỷ lệ Chuyển Đổi Chăm Sóc theo Nhân Sự</h3>
+                        <i class='bx bx-bar-chart-square'></i>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chartPerformance"></canvas>
+                    </div>
+                </div>
+
+            </section>
+            <!-- Detailed Data Table Section -->
+            <section class="data-table-section">
+                <div class="chart-box span-2">
+                    <div class="chart-header">
+                        <h3>Danh sách Lead Chi tiết (Bảo mật)</h3>
+                        <div class="table-controls">
+                            <div class="custom-dropdown dropdown-small" id="table-dropdown-issue">
+                                <div class="dropdown-selected"><span>Lý do</span><i class='bx bx-chevron-down'></i>
+                                </div>
+                                <ul class="dropdown-menu"></ul>
+                            </div>
+                            <div class="table-search">
+                                <i class='bx bx-search'></i>
+                                <input type="text" id="table-search-input" placeholder="Tìm tên hoặc nội dung...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="main-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Họ tên</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Nhân sự</th>
+                                    <th>Phân loại Lý do</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="table-count-info" style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Full Note -->
+    <div id="note-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Chi tiết Ghi chú</h3>
+                <button id="close-modal"><i class='bx bx-x'></i></button>
+            </div>
+            <div id="modal-note-body" class="modal-body"></div>
+        </div>
+    </div>
+
+    </div>
+</body>
+
+</html>

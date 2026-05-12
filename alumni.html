@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alumni Report | Dữ liệu đến hết tháng 3 2026</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <meta name="description" content="Báo cáo thống kê toàn diện về cựu sinh viên IDEAS Institute - phân tích theo trường, khóa, ngành nghề, giới tính và nhiều chiều dữ liệu khác." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="alumni_style.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-bg"></div>
+  <div class="header-inner container">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <i class='bx bxs-pie-chart-alt-2'></i>
+      </div>
+      <div>
+        <div class="brand-name">Alumni Report</div>
+        <div class="brand-sub">Dữ liệu đến hết tháng 3 2026</div>
+      </div>
+    </div>
+    <div class="header-meta" style="display: flex; align-items: center; gap: 16px;">
+      <div style="display: flex; gap: 8px;">
+        <select id="global-school" class="filter-select" style="padding: 6px 12px; font-size: 13px; min-width: 140px;">
+          <option value="all">Tất cả Trường</option>
+        </select>
+        <select id="global-intake" class="filter-select" style="padding: 6px 12px; font-size: 13px; min-width: 140px;">
+          <option value="all">Tất cả Khóa</option>
+        </select>
+      </div>
+      <div class="meta-pill" id="total-badge">
+        <span class="pulse-dot"></span>
+        <span id="header-total">Đang tải...</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO STATS -->
+<section class="hero-stats container" id="hero">
+  <div class="stats-grid" id="kpi-cards"></div>
+</section>
+
+<div class="tab-nav-wrapper">
+  <nav class="tab-nav container" id="tab-nav">
+    <button class="tab-btn active" data-tab="overview"><i class='bx bx-pie-chart-alt-2'></i> Tổng quan</button>
+    <button class="tab-btn" data-tab="schools"><i class='bx bxs-school'></i> Theo trường</button>
+    <button class="tab-btn" data-tab="intakes"><i class='bx bx-calendar-event'></i> Theo khóa</button>
+    <button class="tab-btn" data-tab="industry"><i class='bx bx-buildings'></i> Ngành nghề</button>
+    <button class="tab-btn" data-tab="multischool"><i class='bx bx-git-merge'></i> Đa khóa</button>
+    <button class="tab-btn" data-tab="directory"><i class='bx bx-list-ul'></i> Danh sách</button>
+  </nav>
+</div>
+
+<!-- TAB: OVERVIEW -->
+<div class="tab-content active" id="tab-overview">
+  <div class="container section-grid">
+    <div class="card chart-card">
+      <div class="card-header">
+        <h2 class="card-title">Phân bổ theo trường</h2>
+        <span class="card-badge">Schools</span>
+      </div>
+      <div class="chart-wrap"><canvas id="schoolPieChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="card-header">
+        <h2 class="card-title">Giới tính</h2>
+        <span class="card-badge">Gender</span>
+      </div>
+      <div class="chart-wrap"><canvas id="genderDonut"></canvas></div>
+    </div>
+    <div class="card chart-card wide">
+      <div class="card-header">
+        <h2 class="card-title">Số lượng alumni theo khóa (Top 20)</h2>
+        <span class="card-badge">Intakes</span>
+      </div>
+      <div class="chart-wrap tall"><canvas id="intakeBarChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="card-header">
+        <h2 class="card-title">Năm sinh phổ biến</h2>
+        <span class="card-badge">Birth Year</span>
+      </div>
+      <div class="chart-wrap"><canvas id="birthYearChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="card-header">
+        <h2 class="card-title">Thế hệ nhân sự (Generations)</h2>
+        <span class="card-badge">Demographics</span>
+      </div>
+      <div class="chart-wrap"><canvas id="generationChart"></canvas></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TAB: SCHOOLS -->
+<div class="tab-content" id="tab-schools">
+  <div class="container">
+    <div class="school-cards" id="school-cards-grid"></div>
+    <div class="card mt-24">
+      <div class="card-header">
+        <h2 class="card-title">Chi tiết theo trường</h2>
+      </div>
+      <div class="chart-wrap tall"><canvas id="schoolBarChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: INTAKES -->
+<div class="tab-content" id="tab-intakes">
+  <div class="container">
+    <div class="card mb-24">
+      <div class="card-header">
+        <h2 class="card-title">Tất cả khóa học</h2>
+        <span class="card-badge" id="intake-total-badge"></span>
+      </div>
+      <div class="chart-wrap xtall"><canvas id="allIntakeChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: INDUSTRY -->
+<div class="tab-content" id="tab-industry">
+  <div class="container section-grid">
+    <div class="card chart-card wide">
+      <div class="card-header">
+        <h2 class="card-title">Phân bổ theo ngành nghề</h2>
+        <span class="card-badge">Industries</span>
+      </div>
+      <div class="chart-wrap tall"><canvas id="industryChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="card-header">
+        <h2 class="card-title">Top công ty</h2>
+        <span class="card-badge">Companies</span>
+      </div>
+      <div class="chart-wrap tall"><canvas id="companyChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="card-header">
+        <h2 class="card-title">Top chức danh</h2>
+        <span class="card-badge">Titles</span>
+      </div>
+      <div class="chart-wrap tall"><canvas id="titleChart"></canvas></div>
+    </div>
+    <div class="card chart-card wide">
+      <div class="card-header">
+        <h2 class="card-title">Ngành nghề có tỷ lệ Giám đốc / C-Level cao nhất</h2>
+        <span class="card-badge">Cross-Analysis</span>
+      </div>
+      <div class="chart-wrap tall"><canvas id="crossClevelChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: MULTI-SCHOOL -->
+<div class="tab-content" id="tab-multischool">
+  <div class="container">
+    <div class="info-banner mb-24">
+      <div class="info-icon"><i class='bx bxs-graduation'></i></div>
+      <div>
+        <div class="info-title">Alumni học nhiều khóa</div>
+        <div class="info-desc">Danh sách các alumni đã học qua từ 2 khóa trở lên trong hệ thống IDEAS Institute</div>
+      </div>
+      <div class="info-count" id="multi-count-badge"></div>
+    </div>
+    <div class="card">
+      <div class="table-controls">
+        <input type="text" id="multi-search" class="search-input" placeholder="🔍  Tìm kiếm..." />
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="multi-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Họ và tên</th>
+              <th>Khóa đã học</th>
+              <th>Số khóa</th>
+              <th>Email</th>
+              <th>SĐT</th>
+            </tr>
+          </thead>
+          <tbody id="multi-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: DIRECTORY -->
+<div class="tab-content" id="tab-directory">
+  <div class="container">
+    <div class="filter-bar card mb-24" id="filter-bar">
+      <div class="filter-group">
+        <label class="filter-label">Trường</label>
+        <select id="filter-school" class="filter-select">
+          <option value="">Tất cả</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Giới tính</label>
+        <select id="filter-gender" class="filter-select">
+          <option value="">Tất cả</option>
+          <option value="male">Nam</option>
+          <option value="female">Nữ</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Ngành</label>
+        <select id="filter-industry" class="filter-select">
+          <option value="">Tất cả</option>
+        </select>
+      </div>
+      <div class="filter-group flex-grow">
+        <label class="filter-label">Tìm kiếm</label>
+        <input type="text" id="dir-search" class="search-input" placeholder="🔍  Họ tên, email, SĐT..." />
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Danh sách alumni</h2>
+        <span class="card-badge" id="dir-count-badge"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="dir-table">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Họ và tên</th>
+              <th>Giới tính</th>
+              <th>Trường</th>
+              <th>Khóa</th>
+              <th>Năm sinh</th>
+              <th>Email</th>
+              <th>SĐT</th>
+              <th>Ngành</th>
+              <th>Công ty</th>
+            </tr>
+          </thead>
+          <tbody id="dir-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">Alumni Analytics · IDEAS Institute</div>
+      <div class="footer-note">Dữ liệu được mã hóa theo chuẩn bảo mật • Email & SĐT đã ẩn thông tin nhạy cảm</div>
+    </div>
+  </div>
+</footer>
+
+<script src="alumni_data.js"></script>
+<script src="alumni_app.js"></script>
+</body>
+</html>
