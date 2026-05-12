@@ -54,8 +54,8 @@ function groupTitle(title) {
     if (!title || title.trim() === '') return 'Chưa cập nhật';
     const t = title.toLowerCase();
 
-    if (t.match(/\b(phó giám đốc|phó tổng|vice|deputy director)\b/)) return 'Phó Giám đốc / VP';
-    if (t.match(/\b(ceo|cfo|cto|cmo|coo|cio|chief|giám đốc|tổng giám đốc|chủ tịch|founder|co-founder|owner|chủ doanh nghiệp)\b/)) return 'Giám đốc / C-Level';
+    if (t.match(/\b(phó giám đốc|phó tổng|phó gđ|vice|deputy director)\b/)) return 'Phó Giám đốc / VP';
+    if (t.match(/\b(ceo|cfo|cto|cmo|coo|cio|chief|giám đốc|tổng giám đốc|gđ|chủ tịch|founder|co-founder|owner|chủ doanh nghiệp)\b/)) return 'Giám đốc / C-Level';
     if (t.match(/\b(director)\b/)) return 'Director';
     if (t.match(/\b(manager|trưởng phòng|quản đốc|quản lý|head|trưởng ban|trưởng nhóm|tổ trưởng|leader|captain|chỉ huy)\b/)) return 'Quản lý / Manager';
     if (t.match(/\b(supervisor|giám sát|phó phòng|phó ban|phó nhóm|deputy manager)\b/)) return 'Phó phòng / Supervisor';
